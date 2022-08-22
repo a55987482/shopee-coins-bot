@@ -1,0 +1,2 @@
+TIMEOUT_OPERATION = 2 * 60 * 1000  # 2 minutes
+TIMEOUT_SMS_AUTH = 10 * 60 * 1000 # 10 min
