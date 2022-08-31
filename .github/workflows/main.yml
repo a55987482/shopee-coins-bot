@@ -27,4 +27,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: python main.py -u ${{secret.SHOPEE_USERNAME}} -p ${{secret.SHOPEE_PASSWORD}}
+        run: python main.py -u ${{secrets.SHOPEE_USERNAME}} -p ${{secrets.SHOPEE_PASSWORD}}
