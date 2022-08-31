@@ -149,10 +149,10 @@ def TryReceiveCoin():
     if GetElementExistance(btnReceiveCoin_xpath):
         btnReceiveCoin = browser.find_element(by = By.XPATH, value = btnReceiveCoin_xpath)
         if text.txtReceiveCoin in btnReceiveCoin.text:
-            print(btnReceiveCoin.text)
+            print("[Info] " + btnReceiveCoin.text)
             btnReceiveCoin.click()
         elif text.txtCoinReceived in btnReceiveCoin.text:
-            print(btnReceiveCoin.text)
+            print("[Info] " + btnReceiveCoin.text)
 
 
 def LoginSuccess():
