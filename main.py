@@ -13,6 +13,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
+import chromedriver_autoinstaller
+from pyvirtualdisplay import Display
+display = Display(visible=0, size=(800, 800))  
+display.start()
 
 
 def GetElementExistance(xpath):
@@ -216,16 +220,18 @@ if __name__ == '__main__':
     cookiesFilePath = "./cookies/cookies.json"
     listCookies = []
 
+    chromedriver_autoinstaller.install()
 
     options = Options()
-    options.add_argument("--incognito")
+    # options.add_argument("--incognito")
     options.add_argument('--start-maximized')
-    options.add_argument('--headless')
-    options.add_argument('--disable-extensions')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--lang=zh-TW')
+    options.add_argument('--ignore-certificate-errors')
+    # options.add_argument('--headless')
+    # options.add_argument('--disable-extensions')
+    # options.add_argument('--no-sandbox')
+    # options.add_argument('--disable-dev-shm-usage')
+    # options.add_argument('--disable-gpu')
+    # options.add_argument('--lang=zh-TW')
     # options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
     # browser = webdriver.Chrome('./webdriver/chromedriver')
     browser = webdriver.Chrome(ChromeDriverManager().install())
