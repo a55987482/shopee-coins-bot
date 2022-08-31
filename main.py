@@ -38,33 +38,33 @@ def LoginMessage():
     if GetElementExistance(loginErrorMsg_xpath):
         loginErrorMsg = browser.find_element(by = By.XPATH, value = loginErrorMsg_xpath)
         if loginErrorMsg.text in text.txtWrongPasswords:
-            print("Login failed: wrong password.")
+            print("[Info] Login failed: wrong password.")
 
             return exit_code.EXIT_CODE_WRONG_PASSWORD
     
     elif GetElementExistance(loginErrorPuzzle_xpath):
         loginErrorPuzzle = browser.find_element(by = By.XPATH, value = loginErrorPuzzle_xpath)
         if loginErrorPuzzle.text == text.txtPlayPuzzle:
-            print("Login failed: I cannot solve the puzzle.")
+            print("[Info] Login failed: I cannot solve the puzzle.")
 
             return exit_code.EXIT_CODE_CANNOT_SOLVE_PUZZLE
     
     elif GetElementExistance(txtUseLink_xpath):
         Text = browser.find_element(by = By.XPATH, value = txtUseLink_xpath)
         if Text.text == text.txtUseLink:
-            print("Login failed: please login via SMS.")
+            print("[Info] Login failed: please login via SMS.")
 
             return exit_code.EXIT_CODE_NEED_SMS_AUTH
 
         elif Text.text == text.txtEmailAuth:
-            print("Login failed: need email Auth.")
+            print("[Info] Login failed: need email Auth.")
 
             return exit_code.EXIT_CODE_NEED_EMAIL_AUTH
 
 
 def UserLogin():
-    print('Start to login shopee.')
-    print('Try to login by username and password.')
+    print('[Debug] Start to login shopee.')
+    print('[Debug] Try to login by username and password.')
     inputUsername = browser.find_element(by = By.NAME, value = "loginKey")
     inputUsername.send_keys(userName)
     inputPassword = browser.find_element(by = By.NAME, value = "password")
@@ -74,7 +74,7 @@ def UserLogin():
     btnLogin.click()
 
     for i in range(6):
-        print("Wait for second {}...".format(i), end = "\r", flush = True)
+        print("[Info] Wait for second {}...".format(i), end = "\r", flush = True)
         time.sleep(1)
 
     loginMessageResult = LoginMessage()
@@ -93,29 +93,29 @@ def TryLoginWithSmsLink():
     if (GetElementExistance(tooMuchTry_xpath)):
         tooMuchTry = browser.find_element(by = By.XPATH, value = tooMuchTry_xpath)
         if text.txtTooMuchTry in tooMuchTry.text:
-            print("Cannot use SMS link to login: reach daily limits.")
+            print("[Info] Cannot use SMS link to login: reach daily limits.")
 
             return exit_code.EXIT_CODE_TOO_MUCH_TRY
     else:
-        print("An SMS message is sent to your mobile. Once you click the link I will keep going. I will wait for you and please complete it in 10 minutes.")
+        print("[Info] An SMS message is sent to your mobile. Once you click the link I will keep going. I will wait for you and please complete it in 10 minutes.")
 
         try:
-            print("Wait for the login SMS authorization to be granted....")
+            print("[Info] Wait for the login SMS authorization to be granted....")
             # loginStatus = WebDriverWait(browser, waitTimeout).until(EC.url_matches(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'))
             loginStatus = WebDriverWait(browser, config.TIMEOUT_OPERATION).until(EC.url_matches(r'http[s]?://shopee.tw/shopee-coins(\?.*)?$'))
 
-            print("Login Success")
+            print("[Debug] Login Success")
 
             return exit_code.EXIT_CODE_SUCCESS
 
         except:
-            print("Login Fails")
+            print("[Debug] Login Fails")
 
             return exit_code.EXIT_CODE_LOGIN_DENIED
 
 
 def SaveCookies():
-    print("Save cookies.")
+    print("[Debug] Save cookies.")
     cookies = browser.get_cookies()
     # print("Show Cookie : {}".format(cookies))
     
@@ -142,7 +142,7 @@ def LoadCookies():
 
 
 def TryReceiveCoin():
-    print("Check if coin is already received today.")
+    print("[Debug] Check if coin is already received today.")
     
     btnReceiveCoin_xpath = '//*[@id="main"]/div/div[2]/div/main/section[1]/div[1]/div/section/div[2]/button'
     
@@ -163,46 +163,46 @@ def LoginSuccess():
 def OpenBrowser():
     isCookieFileExist = os.path.isfile(cookiesFilePath)
     if (isCookieFileExist):
-        print("Start to load cookies.")
+        print("[Debug] Start to load cookies.")
         LoadCookies()
         
         for i in range(6):
-            print("Redirect to Coin url ! Wait for second {}...".format(i), end="\r", flush = True)
+            print("[Info] Redirect to Coin url ! Wait for second {}...".format(i), end="\r", flush = True)
             time.sleep(1)
         print("")
 
         browser.get(text.urlCoin)
 
         for i in range(6):
-            print("Wait for second {}...".format(i), end="\r", flush = True)
+            print("[Info] Wait for second {}...".format(i), end="\r", flush = True)
             time.sleep(1)
         print("")
         TryReceiveCoin()
     else:
-        print("No cookies given. Will try to login using username and password.")
+        print("[Info] No cookies given. Will try to login using username and password.")
         browser.get(text.shopeeCoinsLoginUrl)
         try:
             elementPresent = EC.presence_of_element_located((By.NAME, 'loginKey'))
             WebDriverWait(browser, config.TIMEOUT_OPERATION).until(elementPresent)
-            print("Page is ready!")
+            print("[Debug] Page is ready!")
 
             loginMessageResult = UserLogin()
-            print("Result code : {}".format(loginMessageResult))
+            print("[Debug] Result code : {}".format(loginMessageResult))
 
             if loginMessageResult == exit_code.EXIT_CODE_NEED_SMS_AUTH:
                 liginStatusResult = TryLoginWithSmsLink()
 
                 if (liginStatusResult == exit_code.EXIT_CODE_SUCCESS):
                     for i in range(6):
-                        print("Login permitted. Wait for second {}...".format(i), end="\r", flush = True)
+                        print("[Info] Login permitted. Wait for second {}...".format(i), end="\r", flush = True)
                         time.sleep(1)
                     LoginSuccess()
 
                 elif (liginStatusResult == exit_code.EXIT_CODE_LOGIN_DENIED):
-                    print("Login denied.")
+                    print("[Info] Login denied.")
 
         except TimeoutException:
-            print("Loading took too much time!")
+            print("[Info] Loading took too much time!")
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -226,19 +226,19 @@ if __name__ == '__main__':
     # options.add_argument("--incognito")
     options.add_argument('--start-maximized')
     options.add_argument('--ignore-certificate-errors')
-    # options.add_argument('--headless')
-    # options.add_argument('--disable-extensions')
-    # options.add_argument('--no-sandbox')
-    # options.add_argument('--disable-dev-shm-usage')
-    # options.add_argument('--disable-gpu')
-    # options.add_argument('--lang=zh-TW')
+    options.add_argument('--headless')
+    options.add_argument('--disable-extensions')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--lang=zh-TW')
     # options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
     # browser = webdriver.Chrome('./webdriver/chromedriver')
     # browser = webdriver.Chrome(ChromeDriverManager().install())
     browser = webdriver.Chrome(options = options)
 
-    print("username : {}".format(userName))
-    print("password : {}".format(userPassword))
+    print("[Debug] Username : {}".format(userName))
+    print("[Debug] Password : {}".format(userPassword))
 
     OpenBrowser()
 
