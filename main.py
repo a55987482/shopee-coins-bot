@@ -234,7 +234,7 @@ if __name__ == '__main__':
     # options.add_argument('--lang=zh-TW')
     # options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
     # browser = webdriver.Chrome('./webdriver/chromedriver')
-    browser = webdriver.Chrome(ChromeDriverManager().install())
+    # browser = webdriver.Chrome(ChromeDriverManager().install())
 
     print("username : {}".format(userName))
     print("password : {}".format(userPassword))
